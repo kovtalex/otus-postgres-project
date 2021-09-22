@@ -1,4 +1,9 @@
-# otus-postgres-project
+# Построение отказоустойчивого геораспределенного кластера CockroachDB в GKE
+
+![img](./img/diagram.png)
+
+
+
 
 - подключение к cockroachdb
 
