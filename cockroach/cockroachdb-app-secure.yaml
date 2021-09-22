@@ -1,0 +1,52 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-api-postgres
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: node-api-postgres
+  template:
+    metadata:
+      labels:
+        app: node-api-postgres
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - node-api-postgres
+            topologyKey: "kubernetes.io/hostname"    
+      serviceAccountName: cockroachdb
+      volumes:
+      - name: client-certs
+        secret:
+          secretName: cockroachdb.client.root
+          defaultMode: 256
+      containers:
+      - name: node-api-postgres
+        image: node-api-postgres:v0.1
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: client-certs
+          mountPath: /cockroach-certs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-api-postgres
+  labels:
+    app: node-api-postgres
+spec:
+  type: LoadBalancer  
+  selector:
+    app: node-api-postgres
+  ports:
+  - port: 3000
+    targetPort: 3000

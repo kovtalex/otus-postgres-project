@@ -1,0 +1,13 @@
+phantom:
+  address: 34.88.21.9:3000
+  ssl: false
+  load_profile:
+    load_type: rps
+    schedule: line(1,100,5m)
+  ammo_type: uri    
+  ammofile: ammo.txt
+console:
+  enabled: true
+telegraf:
+  enabled: false
+  
